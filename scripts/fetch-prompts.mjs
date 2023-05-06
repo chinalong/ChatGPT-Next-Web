@@ -36,11 +36,11 @@ async function fetchEN() {
   try {
     // const raw = await (await fetch(EN_URL)).text();
     const response = await Promise.race([fetch(EN_URL), timeoutPromise(5000)]);
-    const raw = response.text();
+    const raw = await response.text();
     return raw
       .split("\n")
       .slice(1)
-      .map((v) => v.split('","').map((v) => v.replace('"', "")));
+      .map((v) => v.split('","').map((v) => v.replace(/^"|"$/g, '').replaceAll('""','"')));
   } catch (error) {
     console.error("[Fetch] failed to fetch en prompts", error);
     return [];
